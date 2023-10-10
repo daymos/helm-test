@@ -34,17 +34,17 @@ def calculate_and_normalize_perplexity(questions_list):
             print(f"Skipping item {item} because it lacks required keys")
             continue
 
-            question = item["question"]
-            justification = item["justification"]
+        question = item["question"]
+        justification = item["justification"]
 
-            text = question + " " + justification
-            input_ids = tokenizer.encode(text, return_tensors="pt")
+        text = question + " " + justification
+        input_ids = tokenizer.encode(text, return_tensors="pt")
 
-            with torch.no_grad():
-                output = model(input_ids, labels=input_ids)
-                log_likelihood = output.loss
+        with torch.no_grad():
+            output = model(input_ids, labels=input_ids)
+            log_likelihood = output.loss
 
-            perplexity = torch.exp(log_likelihood).item()
+        perplexity = torch.exp(log_likelihood).item()
 
         # Normalize perplexity
         max_perplexity = 500
