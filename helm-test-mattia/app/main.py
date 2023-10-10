@@ -2,14 +2,12 @@
 
 import os
 from tqdm import tqdm
-from langchain import PromptTemplate, LLMChain
 from typing import List, Dict, Any
 
-from constants import assessment_template, template, question_template
 from data_model import initialize_object_from_schema, question_schema, schema
 from helpers import load_llm_model, unload_llm_model, setup_llm_pipeline
 from scoring import calculate_and_normalize_perplexity, load_model_and_tokenizer
-from helpers import categorize_risk, convert_to_json_and_validate
+from helpers import categorize_risk, convert_to_json_and_validate, analyse_document
 from constants import MEDICAL_RECORD, base_questions, specific_questions
 
 
