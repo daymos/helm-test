@@ -85,3 +85,41 @@ def setup_llm_pipeline(model, tokenizer):
 def unload_llm_model(model):
     del model
     torch.cuda.empty_cache()
+
+
+
+def analyse_document(llm, initial_object, base_questions, specific_questions, context_p):  # noqa: E501 
+
+    print(initial_object)
+
+    for key, question in tqdm(base_questions.items()):
+
+        prompt = PromptTemplate(template=template, input_variables=["question", "context"])
+        llm_chain = LLMChain(prompt=prompt, llm=llm)
+
+        response = llm_chain.run({"question": question, "context": context_p})
+        initial_object["general_info"][key] = response
+
+        if key == "treatment_plan":
+            prompt = PromptTemplate(template=assessment_template, input_variables=["context"])
+            llm_chain = LLMChain(prompt=prompt, llm=llm)
+            response = llm_chain.run({"context": response})
+
+            initial_object["general_info"]["meta"]["treatment_assessment"] = response
+
+    for question in tqdm(specific_questions):
+        question_item = initialize_object_from_schema(question_schema)
+
+        prompt = PromptTemplate(template=question_template, input_variables=["question","context"])
+        llm_chain = LLMChain(prompt=prompt, llm=llm)
+
+        response = llm_chain.run({"question": question, "context": context_p})
+
+        question_item["question"] = question
+        question_item["justification"] = response.split("$$SEPARATOR$$")[1].replace("Answer:", "")
+        question_item["answer"] = response.split("$$SEPARATOR$$")[0].replace("Answer:", "").replace("\n", "")
+
+        initial_object["questions"].append(question_item)
+
+    return initial_object
+
