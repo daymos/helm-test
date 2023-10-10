@@ -1,0 +1,5 @@
+torch
+langchain
+einops
+accelerate
+transformers
