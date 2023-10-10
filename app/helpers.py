@@ -7,6 +7,7 @@ from transformers import AutoTokenizer, pipeline
 from tqdm import tqdm
 from langchain import PromptTemplate, LLMChain
 from constants import assessment_template, template, question_template
+from data_model import initialize_object_from_schema, question_schema, schema
 
 
 def convert_to_json_and_validate(data, schema):

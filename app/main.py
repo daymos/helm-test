@@ -38,7 +38,7 @@ def main_pipeline(
 
         dto["general_info"]["meta"]["risk_profile"] = categorize_risk(dto)
 
-        return convert_to_json_and_validate(dto)
+        return convert_to_json_and_validate(dto, schema)
 
     except Exception as e:
         print(f"An error occurred: {e}")
